@@ -1,13 +1,8 @@
 import { Router } from "express";
+import { testController } from "../controllers/test.controller";
 
 const router = Router();
 
-// GET /api/test
-router.get("/test", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "API working",
-  });
-});
+router.get("/test", testController);
 
 export default router;
