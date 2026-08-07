@@ -1,8 +1,16 @@
 import { Request, Response } from "express";
 
-export const testController = (req: Request, res: Response) => {
+
+export const testController = (
+  req: Request,
+  res: Response
+) => {
+
   res.status(200).json({
+
     success: true,
-    message: "API working",
+    message: "API working"
+
   });
+
 };
