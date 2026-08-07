@@ -2,18 +2,19 @@ import express from "express";
 import cors from "cors";
 
 import testRoutes from "./routes/test.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use("/api", testRoutes);
 
-// Home
-app.get("/", (req, res) => {
-  res.send("Basketball Management API Running 🏀");
+app.use("/api/auth", authRoutes);
+
+app.get("/", (req,res)=>{
+    res.send("Basketball Management API Running 🏀");
 });
 
 export default app;
