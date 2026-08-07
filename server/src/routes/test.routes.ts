@@ -2,10 +2,12 @@ import { Router } from "express";
 
 const router = Router();
 
+// GET /api/test
 router.get("/test", (req, res) => {
-    res.json({
-        message: "API working"
-    });
+  res.status(200).json({
+    success: true,
+    message: "API working",
+  });
 });
 
 export default router;
