@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 
+
+// =========================
+// REGISTER
+// =========================
 
 export const register = async (
     req: Request,
@@ -51,12 +56,106 @@ export const register = async (
         res.status(201).json({
 
             message: "Register success",
-            user
+
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
 
         });
 
 
     } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+
+    }
+
+};
+
+
+// =========================
+// LOGIN
+// =========================
+
+export const login = async (
+    req: Request,
+    res: Response
+) => {
+
+    try {
+
+        const {
+            email,
+            password
+        } = req.body;
+
+
+        const user = await User.findOne({
+            email
+        });
+
+
+        if (!user) {
+
+            return res.status(400).json({
+                message: "Invalid email or password"
+            });
+
+        }
+
+
+        const isPasswordCorrect =
+            await bcrypt.compare(
+                password,
+                user.password
+            );
+
+
+        if (!isPasswordCorrect) {
+
+            return res.status(400).json({
+                message: "Invalid email or password"
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                userId: user._id.toString(),
+                role: user.role
+            },
+            process.env.JWT_SECRET as string,
+            {
+                expiresIn: "1d"
+            }
+        );
+
+
+        res.status(200).json({
+
+            message: "Login success",
+
+            token,
+
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
 
         res.status(500).json({
             message: "Server error"
